@@ -52,15 +52,28 @@ Para executar o notebook e reproduzir as simulações e gráficos localmente, ce
 
 ## 📝 Exercício 1.1: Dedução Analítica da Disponibilidade
 
-O objetivo desta etapa é deduzir a fórmula matemática que calcula a disponibilidade ($A$) de um serviço replicado em $n$ servidores. O sistema exige um mínimo de $k$ servidores disponíveis para ser acessado de forma consistente, e cada servidor possui uma probabilidade individual e independente $p$ de estar operante.
+O objetivo da função é calcular matematicamente a disponibilidade de um serviço com base na falha independente das máquinas que compõe o sistema sendo:
+- $n$ = número total de servidores no sistema
+- $k$ = a quantidade mínima de servidores que deve estar ativa simultaneamente para o sistema funcionar
+- $p$ = probabilidade individual do funcionamento de cada servidor
 
-### 1. A Fórmula Geral (Distribuição Binomial)
-Como o estado de cada servidor é independente (ele pode estar disponível ou indisponível), o cenário é perfeitamente modelado por uma **Distribuição Binomial**. 
+### 1. Obtendo a fórmula
 
-A probabilidade de termos **exatamente** $i$ servidores disponíveis dentre os $n$ totais é dada pela combinação de $n$ tomados $i$ a $i$, multiplicada pela probabilidade de $i$ sucessos e $n-i$ falhas:
-$$P(X = i) = \binom{n}{i} p^i (1-p)^{n-i}$$
+#### Disponibilidade independente de cada servidor
 
-Como o serviço se mantém operacional se **pelo menos** $k$ servidores estiverem disponíveis, precisamos somar as probabilidades de todos os cenários viáveis (de $k$ até $n$ servidores online). Isso nos dá a fórmula geral:
+Cada um dos servidores no sistema pode ter apenas um de dois estados, disponível e indisponível, sendo a probabilidade dele estar disponível $p$, logo temos para cada um deles a probabilidade de estar indisponível como $(1 - p)$.
+
+#### Probabilidade de cenário específico
+
+Se quisermos analisar a probabilidade de um caso específico onde temos $i$ servidores online, enquanto o restante $(n - i)$ está offline, obtemos essa probabilidade com $p^i (1 - p)^{n - i}$. É aplicada a probabilidade de se estar disponível para todos os servidores que queremos disponíveis no caso ($p^i$) e multiplicada pela probabilidade de indisponibilidade para todos aqueles que estariam indisponíveis no caso ($(1 - p)^{n - i}$).
+
+### Combinações
+
+Como os $i$ servidores podem ser quaisquer uns dentro de $n$, para considerar todas as combinações de quem está online, multiplicamos a probabilidade pelo coeficiente binomial $\binom{n}{i}$.
+
+### Pelo menos $k$ servidores
+
+Como estamos trabalhando com pelo menos $k$ servidores disponíveis, não podemos analisar somente o caso exato onde $i = k$, mas também todos os cenários subsequentes até $n$. Assim, é necessário fazer o somatório das probabilidades de todos esses cenários, obtendo a equação geral:
 
 $$A(n, k, p) = \sum_{i=k}^{n} \binom{n}{i} p^i (1-p)^{n-i}$$
 
